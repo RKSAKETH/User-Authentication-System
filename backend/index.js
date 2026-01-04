@@ -7,4 +7,3 @@ app = express()
 app.use(cors())
 app.json()
 
-app.listen()
