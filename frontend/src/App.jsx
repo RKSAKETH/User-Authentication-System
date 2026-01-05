@@ -1,17 +1,32 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./Signup";
+import Login from "./Login";
 
 const App = () => {
+  const isAuthenticated = !!localStorage.getItem("token");
+
   return (
     <Router>
       <Routes>
-        {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/signup" replace />} />
+        {/* Default route */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <h2 style={{ textAlign: "center", marginTop: "40px" }}>
+                Logged in successfully
+              </h2>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
-        {/* Signup page */}
+        {/* Auth routes */}
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Fallback route */}
+        {/* Fallback */}
         <Route path="*" element={<h2>404 - Page Not Found</h2>} />
       </Routes>
     </Router>

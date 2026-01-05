@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: ""
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -25,12 +23,11 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
     setError("");
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/users/signup`,
+        `${API_BASE_URL}/api/users/login`,
         {
           method: "POST",
           headers: {
@@ -43,18 +40,14 @@ const Signup = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Signup failed");
+        throw new Error(data.message || "Login failed");
       }
 
-      // Optional success message (brief)
-      setMessage("Signup successful. Redirecting to login...");
+      // Store token
+      localStorage.setItem("token", data.token);
 
-      // Redirect after short delay (UX-friendly)
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-
-      setFormData({ username: "", email: "", password: "" });
+      // Redirect after login
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -65,16 +58,7 @@ const Signup = () => {
   return (
     <div style={styles.container}>
       <form onSubmit={handleSubmit} style={styles.form}>
-        <h2>Sign Up</h2>
-
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
+        <h2>Login</h2>
 
         <input
           type="email"
@@ -95,10 +79,9 @@ const Signup = () => {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
+          {loading ? "Logging in..." : "Login"}
         </button>
 
-        {message && <p style={{ color: "green" }}>{message}</p>}
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>
@@ -120,4 +103,4 @@ const styles = {
   }
 };
 
-export default Signup;
+export default Login;
