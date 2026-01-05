@@ -3,26 +3,13 @@ import Signup from "./Signup";
 import Login from "./Login";
 
 const App = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
-
   return (
     <Router>
       <Routes>
-        {/* Default route */}
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <h2 style={{ textAlign: "center", marginTop: "40px" }}>
-                Logged in successfully
-              </h2>
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        {/* Root always goes to signup */}
+        <Route path="/" element={<Navigate to="/signup" />} />
 
-        {/* Auth routes */}
+        {/* Auth pages */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
 
