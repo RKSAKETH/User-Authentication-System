@@ -29,32 +29,34 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/users/signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(formData)
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/users/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
 
-      const data = await response.json();
+      const text = await response.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(
+          "Server is waking up. Please wait a few seconds and try again."
+        );
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Signup failed");
       }
 
-      // Optional success message (brief)
       setMessage("Signup successful. Redirecting to login...");
 
-      // Redirect after short delay (UX-friendly)
       setTimeout(() => {
         navigate("/login");
       }, 1000);
-
-      setFormData({ username: "", email: "", password: "" });
     } catch (err) {
       setError(err.message);
     } finally {
