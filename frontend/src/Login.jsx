@@ -50,7 +50,7 @@ const Login = () => {
       }
 
       localStorage.setItem("token", data.token);
-      navigate("/");
+      navigate("/content");
     } catch (err) {
       setError(err.message);
     } finally {
